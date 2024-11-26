@@ -1,4 +1,5 @@
 com/example/LogWriter.class
 com/example/MyAgent.class
+com/example/MethodCallTransformer.class
 com/example/MyTransformer.class
 com/example/ExampleClass.class

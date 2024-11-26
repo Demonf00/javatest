@@ -17,18 +17,18 @@ public class ExampleClass {
     }
 
     public void allocateMemory() {
-        System.out.println("Starting memory allocation...");
+        // System.out.println("Starting memory allocation...");
         long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     
         List<byte[]> memoryHog = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             memoryHog.add(new byte[1 * 1024 * 1024]); // 每次分配 1 MB
             long currentMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            System.out.println((i + 1) + " MB allocated, current heap usage: " + (currentMemory - startMemory) + " bytes");
+            // System.out.println((i + 1) + " MB allocated, current heap usage: " + (currentMemory - startMemory) + " bytes");
         }
     
         long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        System.out.println("Memory allocation complete. Total allocated: " + (endMemory - startMemory) + " bytes.");
+        // System.out.println("Memory allocation complete. Total allocated: " + (endMemory - startMemory) + " bytes.");
     }
 
     public static void main(String[] args) {
