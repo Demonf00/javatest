@@ -80,7 +80,9 @@ public class MethodCallTransformer implements ClassFileTransformer {
     public static void printCallStats() {
         System.out.println("Method Call Statistics:");
         methodCallCount.forEach((method, count) -> {
-            System.out.println(method + " was called " + count + " times.");
+            if (count >= 1) {
+                System.out.println(method + " was called " + count + " times.");
+            }
         });
     }
 
