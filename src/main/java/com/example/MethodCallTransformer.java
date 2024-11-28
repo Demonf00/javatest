@@ -55,7 +55,7 @@ public class MethodCallTransformer implements ClassFileTransformer {
 
             // System.out.println("4");
         } catch (Exception e) {
-            System.out.println(methodName);
+            // System.out.println(methodName);
             methodCallCount.merge(methodName, 1, Integer::sum);
             // System.out.println("4");
             // method.insertBefore(
