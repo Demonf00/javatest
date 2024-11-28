@@ -11,15 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MethodCallTransformer implements ClassFileTransformer {
 
-    // 记录方法调用次数的全局哈希表
+    // record the method called in hash map
     private static final ConcurrentHashMap<String, Integer> methodCallCount = new ConcurrentHashMap<>();
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classfileBuffer) {
-        // 过滤不感兴趣的类
-        if (className == null || className.startsWith("jdk") || className.startsWith("java/") || className.startsWith("sun/")) {
-            return null; // 不处理 JDK 或系统类
+        // filter out system classes
+        if (className == null || className.startsWith("jdk") || className.startsWith("java/") || className.startsWith("sun/") || className.startsWith("com/example/MethodCallTransformer")) {
+            return null;
         }
 
         try {
@@ -28,9 +28,7 @@ public class MethodCallTransformer implements ClassFileTransformer {
             CtClass ctClass = classPool.get(className.replace("/", "."));
 
             // System.out.println(ctClass.getName());
-            // 遍历类中所有的方法
             for (CtMethod method : ctClass.getDeclaredMethods()) {
-                // 为每个方法插入计数逻辑
                 instrumentMethod(method);
                 instrumentHeapAllocation(method);
             }
@@ -40,27 +38,45 @@ public class MethodCallTransformer implements ClassFileTransformer {
             return ctClass.toBytecode();
         } catch (Exception e) {
             e.printStackTrace();
+            // System.out.println("5");
         }
         return null;
     }
 
     private void instrumentMethod(CtMethod method) throws CannotCompileException {
         String methodName = method.getLongName();
+        // System.out.println(methodName);
+        // insert increment call count
+        try{
+            method.insertBefore("methodCallCount.merge("+methodName+", 1, Integer::sum);");
+            // method.insertBefore(
+            //         "{ incrementCallCount(\"" + methodName + "\"); }"
+            // );
 
-        // 在方法开头插入计数逻辑
-        method.insertBefore(
-                "{ com.example.MethodCallTransformer.incrementCallCount(\"" + methodName + "\"); }"
-        );
+            // System.out.println("4");
+        } catch (Exception e) {
+            System.out.println(methodName);
+            methodCallCount.merge(methodName, 1, Integer::sum);
+            // System.out.println("4");
+            // method.insertBefore(
+            //         "{ com.example.MethodCallTransformer.incrementCallCount(\"" + methodName + "\"); }"
+            // );
+        }
         // System.out.println("4");
 
     }
 
-    // 计数逻辑
+    // increment call count
     public static void incrementCallCount(String methodName) {
-        methodCallCount.merge(methodName, 1, Integer::sum);
+        try{
+            methodCallCount.merge(methodName, 1, Integer::sum);
+            // System.out.println("44");
+        } catch (Exception e) {
+            System.out.println("45");
+        }
     }
 
-    // 打印调用统计
+    // print the usage for each method
     public static void printCallStats() {
         System.out.println("Method Call Statistics:");
         methodCallCount.forEach((method, count) -> {
@@ -73,7 +89,7 @@ public class MethodCallTransformer implements ClassFileTransformer {
         method.insertBefore("startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();");
         method.insertAfter(
                 "{ long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();" +
-                "System.out.println(\"Heap allocated by " + method.getLongName() + ": \" + (endMemory - startMemory) + \" bytes.\"); }"
+                "if (endMemory - startMemory!=0) {System.out.println(\"Heap allocated by " + method.getLongName() + ": \" + (endMemory - startMemory) + \" bytes.\");} }"
         );
     }
 }

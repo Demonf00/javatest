@@ -6,7 +6,7 @@ import java.util.List;
 public class ExampleClass {
     public void doWork() {
         try {
-            Thread.sleep(1000);  // 模拟耗时任务
+            Thread.sleep(1000);  // simulate time-consuming task
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -22,7 +22,7 @@ public class ExampleClass {
     
         List<byte[]> memoryHog = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            memoryHog.add(new byte[1 * 1024 * 1024]); // 每次分配 1 MB
+            memoryHog.add(new byte[1 * 1024 * 1024]); // allocate 1MB each time
             long currentMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             // System.out.println((i + 1) + " MB allocated, current heap usage: " + (currentMemory - startMemory) + " bytes");
         }

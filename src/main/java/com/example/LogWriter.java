@@ -8,7 +8,7 @@ public class LogWriter {
 
     static {
         try {
-            writer = new FileWriter("profile_log.txt", true);  // true 表示追加写入
+            writer = new FileWriter("profile_log.txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
