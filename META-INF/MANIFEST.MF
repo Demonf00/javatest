@@ -3,7 +3,9 @@ Archiver-Version: Plexus Archiver
 Created-By: Apache Maven 3.6.3
 Built-By: demonf
 Build-Jdk: 17.0.12
-Main-Class: com.example.MyAgent
 Premain-Class: com.example.MyAgent
+Agent-Class: com.example.MyAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
 Boot-Class-Path: ./target/my-instrumentation-project-1.0-SNAPSHOT.jar
 

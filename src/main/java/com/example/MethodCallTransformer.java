@@ -48,7 +48,10 @@ public class MethodCallTransformer implements ClassFileTransformer {
         // System.out.println(methodName);
         // insert increment call count
         try{
-            method.insertBefore("methodCallCount.merge("+methodName+", 1, Integer::sum);");
+            method.insertBefore(
+                    "{ com.example.MethodCallTransformer.incrementCallCount(\"" + methodName + "\"); }"
+            );
+            // methodCallCount.merge(methodName, 1, Integer::sum);
             // method.insertBefore(
             //         "{ incrementCallCount(\"" + methodName + "\"); }"
             // );

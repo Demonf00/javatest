@@ -22,7 +22,7 @@ public class ExampleClass {
     
         List<byte[]> memoryHog = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            memoryHog.add(new byte[1 * 1024 * 1024]); // allocate 1MB each time
+            memoryHog.add(new byte[1* 1024 * 1024]); // allocate 0.5MB each time
             long currentMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             // System.out.println((i + 1) + " MB allocated, current heap usage: " + (currentMemory - startMemory) + " bytes");
         }
@@ -35,6 +35,8 @@ public class ExampleClass {
         ExampleClass example = new ExampleClass();
         example.doWork();
         example.anotherMethod();
+        example.allocateMemory();
+        example.allocateMemory();
         example.allocateMemory();
         example.allocateMemory();
     }
